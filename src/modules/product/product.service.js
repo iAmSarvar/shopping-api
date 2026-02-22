@@ -13,10 +13,7 @@ function buildFilter(query) {
   }
 
   if (query.search) {
-    filter.$or = [
-      { name: { $regex: query.search, $options: "i" } },
-      { description: { $regex: query.search, $options: "i" } },
-    ];
+    filter.$text = { $search: query.search };
   }
 
   return filter;

@@ -10,6 +10,9 @@ async function start() {
   await mongoose.connect(env.MONGO_URI);
   console.log("DB Connected!");
 
+  await mongoose.connection.syncIndexes();
+  console.log("✅ Indexes synced");
+
   app.listen(env.PORT, () => {
     console.log(`🚀 Server running on http://localhost:${env.PORT}`);
   });
