@@ -30,4 +30,27 @@ const register = catchAsync(async (req, res, next) => {
   });
 });
 
-export default { register };
+const login = catchAsync(async (req, res, next) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) return next(new AppError("Please enter email and password", 400));
+
+  const user = await authService.findUserByEmail(email);
+
+  if (!user) return next(new AppError("Invalid email or password", 401));
+
+  const ok = await user.comparePassword(password);
+  if (!ok) return next(new AppError("Invalid email or password", 401));
+
+  const token = sighToken(user._id);
+
+  res.status(200).json({
+    status: "success",
+    token,
+    data: {
+      user: { id: user._id, name: user.name, email: user.email, role: user.role },
+    },
+  });
+});
+
+export default { register, login };
