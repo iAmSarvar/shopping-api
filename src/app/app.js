@@ -6,6 +6,7 @@ import morgan from "morgan";
 import { AppError } from "../utils/AppError.js";
 import { errorHandler } from "../middlewares/errorHandler.js";
 import productRoutes from "../modules/product/product.routes.js";
+import authRouter from "../modules/auth/auth.routes.js";
 
 export function createApp(env) {
   const app = express();
@@ -21,6 +22,7 @@ export function createApp(env) {
   });
 
   app.use("/api/v1/products", productRoutes);
+  app.use("/api/v1/auth", authRouter);
 
   // 404 handler
   app.use((req, res, next) => {
