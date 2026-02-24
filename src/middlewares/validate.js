@@ -6,7 +6,7 @@ const validate = (schema) => (req, res, next) => {
   if (!result.success) {
     const message = result.error.issues
       .map((i) => {
-        if (i.code === "invalid_type") {
+        if (i.code === "invalid_type" && i.path.length !== 0) {
           return `${i.path[0]} is required`;
         }
         return i.message;

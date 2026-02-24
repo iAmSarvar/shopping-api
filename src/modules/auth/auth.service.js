@@ -8,4 +8,8 @@ const findUserByEmail = async (email) => {
   return User.findOne({ email }).select("+password");
 };
 
-export default { createUser, findUserByEmail };
+const findUserPublicByEmail = async (email) => {
+  return User.findOne({ email });
+};
+
+export default { createUser, findUserByEmail, findUserPublicByEmail };
