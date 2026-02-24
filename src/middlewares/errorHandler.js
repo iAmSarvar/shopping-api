@@ -82,6 +82,17 @@ export const errorHandler = (err, req, res, next) => {
     message = out.message;
   }
 
+  // Jwt error
+  if (err.name === "JsonWebTokenError") {
+    statusCode = 401;
+    message = "Invalid token. Please login again.";
+  }
+
+  if (err.name === "TokenExpiredError") {
+    statusCode = 401;
+    message = "Your token has expired. Please login again.";
+  }
+
   const isOperational = err.isOperational === true;
 
   if (!isDev && !isOperational && statusCode === 500) {

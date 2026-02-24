@@ -53,4 +53,18 @@ const login = catchAsync(async (req, res, next) => {
   });
 });
 
-export default { register, login };
+const getMe = (req, res) => {
+  res.status(200).json({
+    status: "success",
+    data: {
+      user: {
+        id: req.user._id,
+        name: req.user.name,
+        email: req.user.email,
+        role: req.user.role,
+      },
+    },
+  });
+};
+
+export default { register, login, getMe };
