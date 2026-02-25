@@ -145,4 +145,26 @@ const resetPassword = catchAsync(async (req, res, next) => {
   });
 });
 
-export default { register, login, getMe, forgotPassword, resetPassword };
+// update password for logged in user
+const updatePassword = catchAsync(async (req, res, next) => {
+  const { currentPassword, newPassword } = req.body;
+  const user = await User.findById(req.user._id).select("+password");
+
+  const ok = await user.comparePassword(currentPassword);
+  if (!ok) {
+    return next(new AppError("Invalid password. Please try again!", 401));
+  }
+
+  user.password = newPassword;
+  await user.save();
+
+  const token = signToken(user._id);
+
+  res.status(200).json({
+    status: "success",
+    token,
+    message: "Password updated successfully",
+  });
+});
+
+export default { register, login, getMe, forgotPassword, resetPassword, updatePassword };
