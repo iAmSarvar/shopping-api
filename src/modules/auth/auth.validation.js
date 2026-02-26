@@ -24,10 +24,21 @@ const updatePasswordSchema = z.object({
   newPassword: z.string().min(8, "New password must be at least 8 characters"),
 });
 
+const updateMeSchema = z
+  .object({
+    name: z.string().trim().min(1, "Name cannot be empty").max(80).optional(),
+    email: z.string().trim().email("Email must be valid").optional(),
+  })
+  .strict()
+  .refine((data) => Object.keys(data).length > 0, {
+    message: "Provide at least one field to update",
+  });
+
 export {
   registerSchema,
   loginSchema,
   forgotPasswordSchema,
   resetPasswordSchema,
   updatePasswordSchema,
+  updateMeSchema,
 };

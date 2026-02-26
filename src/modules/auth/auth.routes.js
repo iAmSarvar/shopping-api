@@ -8,6 +8,7 @@ import {
   forgotPasswordSchema,
   resetPasswordSchema,
   updatePasswordSchema,
+  updateMeSchema,
 } from "./auth.validation.js";
 
 const router = Router();
@@ -16,7 +17,10 @@ router.post("/register", validate(registerSchema), authController.register);
 
 router.post("/login", validate(loginSchema), authController.login);
 
-router.get("/me", protect, authController.getMe);
+router
+  .route("/me")
+  .get(protect, authController.getMe)
+  .patch(protect, validate(updateMeSchema), authController.updateMe);
 
 router.post("/forgot-password", validate(forgotPasswordSchema), authController.forgotPassword);
 

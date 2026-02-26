@@ -167,4 +167,33 @@ const updatePassword = catchAsync(async (req, res, next) => {
   });
 });
 
-export default { register, login, getMe, forgotPassword, resetPassword, updatePassword };
+// Update user data
+const updateMe = catchAsync(async (req, res, next) => {
+  const updates = {};
+
+  if (req.body.name !== undefined) updates.name = req.body.name;
+  if (req.body.email !== undefined) updates.email = req.body.email;
+
+  if (req.body.email && req.user.email === req.body.email.toLowerCase()) {
+    return next(new AppError("You're already using this email.", 400));
+  }
+
+  const user = await User.findByIdAndUpdate(req.user._id, updates, {
+    runValidators: true,
+    new: true,
+  });
+
+  res.status(200).json({
+    status: "success",
+    data: {
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
+    },
+  });
+});
+
+export default { register, login, getMe, forgotPassword, resetPassword, updatePassword, updateMe };
