@@ -5,7 +5,7 @@ const createUser = async (data) => {
 };
 
 const findUserByEmail = async (email) => {
-  return User.findOne({ email }).select("+password");
+  return User.findOne({ email }).select("+password").select("+active");
 };
 
 const findUserPublicByEmail = async (email) => {

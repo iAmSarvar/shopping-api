@@ -20,7 +20,8 @@ router.post("/login", validate(loginSchema), authController.login);
 router
   .route("/me")
   .get(protect, authController.getMe)
-  .patch(protect, validate(updateMeSchema), authController.updateMe);
+  .patch(protect, validate(updateMeSchema), authController.updateMe)
+  .delete(protect, authController.deactivateMe);
 
 router.post("/forgot-password", validate(forgotPasswordSchema), authController.forgotPassword);
 

@@ -17,7 +17,12 @@ const protect = catchAsync(async (req, res, next) => {
 
   const decoded = await util.promisify(jwt.verify)(token, process.env.JWT_SECRET);
 
-  const currentUser = await User.findById(decoded.id);
+  const currentUser = await User.findById(decoded.id).select("+active");
+
+  // check if user deleted their account
+  if (currentUser.active === false) {
+    return next(new AppError("Your account is deactivated", 401));
+  }
 
   if (!currentUser) {
     return next(new AppError("User no longer exists", 401));

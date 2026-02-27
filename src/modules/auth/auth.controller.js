@@ -40,7 +40,7 @@ const login = catchAsync(async (req, res, next) => {
 
   const user = await authService.findUserByEmail(email);
 
-  if (!user) return next(new AppError("Invalid email or password", 401));
+  if (!user || user.active === false) return next(new AppError("Invalid email or password", 401));
 
   const ok = await user.comparePassword(password);
   if (!ok) return next(new AppError("Invalid email or password", 401));
@@ -196,4 +196,22 @@ const updateMe = catchAsync(async (req, res, next) => {
   });
 });
 
-export default { register, login, getMe, forgotPassword, resetPassword, updatePassword, updateMe };
+const deactivateMe = catchAsync(async (req, res) => {
+  await User.findByIdAndUpdate(req.user._id, { active: false });
+
+  res.status(204).json({
+    status: "success",
+    data: null,
+  });
+});
+
+export default {
+  register,
+  login,
+  getMe,
+  forgotPassword,
+  resetPassword,
+  updatePassword,
+  updateMe,
+  deactivateMe,
+};
